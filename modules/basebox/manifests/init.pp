@@ -1,5 +1,5 @@
 class basebox {
-  class { 'basebox::packages' }
+  class { 'basebox::packages': }
 
   contain basebox::packages
 }
