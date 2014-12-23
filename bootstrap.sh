@@ -16,12 +16,16 @@ checkpackage () {
 }
 
 red () {
-  echo -ne "${COLOR_RED}${1}${COLOR_DEFAULT}"
+  echo -ne "${COLOR_RED}$@${COLOR_DEFAULT}"
 }
 
 green () {
-  echo -ne "${COLOR_GREEN}${1}${COLOR_DEFAULT}"
+  echo -ne "${COLOR_GREEN}$@${COLOR_DEFAULT}"
 }
+
+echo "Gathering system configuration..."
+mkdir data
+echo "basebox::packages::kernelversion: `uname -r | sed 's/.x86_64//'`" > data/common.yaml
 
 echo "Checking for required packages..."
 
@@ -69,6 +73,6 @@ done
 
 echo -ne "\e[39m"
 echo "Applying configurations..."
-puppet apply --modulepath=modules -e 'include basebox'
+puppet apply --modulepath=modules --hiera_config=hiera.yaml -e 'include basebox'
 
 
