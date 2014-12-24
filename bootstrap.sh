@@ -3,6 +3,14 @@
 COLOR_DEFAULT="\e[39m"
 COLOR_GREEN="\e[32m"
 COLOR_RED="\e[31m"
+LOG=/tmp/basebox.log
+CHECKOUT=1
+PREFIX="basebox"
+
+if [ "$1" == "--no-checkout" ]; then
+  CHECKOUT=0
+  PREFIX="."
+fi
 
 PACKAGES="yum:git yum:ruby gem:puppet"
 
@@ -23,9 +31,6 @@ green () {
   echo -ne "${COLOR_GREEN}$@${COLOR_DEFAULT}"
 }
 
-echo "Gathering system configuration..."
-mkdir data
-echo "basebox::packages::kernelversion: `uname -r | sed 's/.x86_64//'`" > data/common.yaml
 
 echo "Checking for required packages..."
 
@@ -46,6 +51,18 @@ for PACKAGE in $PACKAGES; do
     echo
   fi
 done
+
+if [ "$CHECKOUT" == "1" ] ; then
+  echo
+  echo "Downloading basebox module..."
+  git clone https://github.com/josiahp/basebox.git 2>$LOG 1>$LOG
+  echo
+fi
+
+echo "Gathering system configuration..."
+
+mkdir -p $PREFIX/data
+echo "basebox::packages::kernelversion: `uname -r | sed 's/.x86_64//'`" > $PREFIX/data/common.yaml
 
 echo
 
@@ -73,6 +90,6 @@ done
 
 echo -ne "\e[39m"
 echo "Applying configurations..."
-puppet apply --modulepath=modules --hiera_config=hiera.yaml -e 'include basebox'
+puppet apply --modulepath=$PREFIX/modules --hiera_config=$PREFIX/hiera.yaml -e 'include basebox'
 
 

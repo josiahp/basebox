@@ -2,6 +2,8 @@ class basebox::packages {
 
   $kernelversion = hiera('basebox::packages::kernelversion')
 
+  # Guest Additions Tools
+
   package { 'bzip2':
     ensure        => installed,
     allow_virtual => false,
@@ -29,4 +31,15 @@ class basebox::packages {
     ensure   => latest,
     provider => 'gem',
   }
+  package { 'libshadow':
+    ensure   => latest,
+    provider => 'gem',
+  }
+
+  # Vagrant Tools
+  package { 'openssh-server':
+    ensure        => latest,
+    allow_virtual => false,
+  }
+
 }
