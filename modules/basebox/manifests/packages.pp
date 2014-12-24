@@ -41,5 +41,8 @@ class basebox::packages {
     ensure        => latest,
     allow_virtual => false,
   }
-
+  package { 'sudo':
+    ensure        => latest,
+    allow_virtual => false,
+  }
 }

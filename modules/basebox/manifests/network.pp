@@ -6,6 +6,7 @@ class basebox::network {
     }
     exec { 'set interfaces to start on boot':
       command => '/bin/sed -i"" "s/ONBOOT=.*/ONBOOT=yes/" /etc/sysconfig/network-scripts/ifcfg-*',
+      unless  => '/bin/grep ONBOOT=yes /etc/sysconfig/network-scripts/ifcfg-*',
     }
   }
 }
