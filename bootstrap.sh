@@ -89,6 +89,10 @@ for PACKAGE in $INSTALL_PACKAGES; do
 done
 
 echo -ne "\e[39m"
+echo "Downloading public key..."
+mkdir -p $PREFIX/modules/basebox/files
+curl -o $PREFIX/modules/basebox/files/vagrant.pub https://raw.githubusercontent.com/mitchellh/vagrant/master/keys/vagrant.pub 2>/dev/null
+
 echo "Applying configurations..."
 puppet apply --modulepath=$PREFIX/modules --hiera_config=$PREFIX/hiera.yaml -e 'include basebox'
 
